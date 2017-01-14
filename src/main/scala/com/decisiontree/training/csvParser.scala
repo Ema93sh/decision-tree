@@ -17,9 +17,9 @@ object CSVParser {
 
   def generateDataTable(tableName: String, csvFile: Source, columnTypes: Map[String, ColumnType]): Try[DataTable] = {
      val reader = CSVReader.open(csvFile)
-     val dataWithHeaders = reader.allWithHeaders()
+     val (headers, dataWithHeaders) = reader.allWithOrderedHeaders()
      reader.close()
-     val columnMap = columnTypes.keys map { columnName => columnName -> dataWithHeaders.map(row => row(columnName)) }
+     val columnMap = headers map { columnName => columnName -> dataWithHeaders.map(row => row(columnName)) }
      val dataColumns = columnMap map {
        case (columnName, colData) =>
           columnTypes(columnName) match {

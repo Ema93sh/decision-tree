@@ -13,8 +13,7 @@ class CsvParerSpec extends FunSpec with Matchers {
   describe("CSV Parser") {
     describe("Datatable") {
       it("should generate datatable from csv file") {
-        val columnTypes = Map( "Day" -> classOf[String],
-                               "Outlook" -> classOf[String],
+        val columnTypes = Map( "Outlook" -> classOf[String],
                                "Temperature" -> classOf[String],
                                "Humidity" -> classOf[String],
                                "Wind" -> classOf[String],
@@ -23,14 +22,12 @@ class CsvParerSpec extends FunSpec with Matchers {
         val csvFile = Source.fromURL(getClass.getResource("/willJohnPlayTennis.csv"))
         val datatable = CSVParser.generateDataTable("Table", csvFile, columnTypes).get
 
-        val dayColumn = datatable.columns.get("Day").get
         val outlookColumn = datatable.columns.get("Outlook").get
         val tempratureColumn = datatable.columns.get("Temperature").get
         val windColumn = datatable.columns.get("Wind").get
         val humidityColumn = datatable.columns.get("Humidity").get
         val playTennisColumn = datatable.columns.get("PlayTennis").get
 
-        dayColumn.data should have size 14
         outlookColumn.data should have size 14
         tempratureColumn.data should have size 14
         windColumn.data should have size 14
@@ -48,12 +45,17 @@ class CsvParerSpec extends FunSpec with Matchers {
         val csvFile = Source.fromURL(getClass.getResource("/iris-data.csv"))
         val datatable = CSVParser.generateDataTable("Iris Data", csvFile, columnTypes).get
 
-        val slength = datatable.columns.get("Sepal length").get
-        val swidth = datatable.columns.get("Sepal width").get
-        val plength = datatable.columns.get("Petal length").get
-        val pwidth = datatable.columns.get("Petal width").get
-        val irisclass = datatable.columns.get("Class").get
+        val slength = datatable.columns(0)
+        val swidth = datatable.columns(1)
+        val plength = datatable.columns(2)
+        val pwidth = datatable.columns(3)
+        val irisclass = datatable.columns(4)
 
+        slength.name should equal("Sepal length")
+        swidth.name should equal("Sepal width")
+        plength.name should equal("Petal length")
+        pwidth.name should equal("Petal width")
+        
         slength.data should have size 150
         swidth.data should have size 150
         plength.data should have size 150
